@@ -9,5 +9,8 @@ namespace SlunchevIzgrev.Data
             : base(options)
         {
         }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
     }
 }
