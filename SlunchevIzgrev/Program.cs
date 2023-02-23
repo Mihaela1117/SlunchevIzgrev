@@ -19,6 +19,9 @@ namespace SlunchevIzgrev
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SlunchevIzgrevDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers(
+                options =>
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
             var app = builder.Build();
 
