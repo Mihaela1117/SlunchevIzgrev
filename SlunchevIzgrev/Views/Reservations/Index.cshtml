@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <h1>Index</h1>
 
 <p>
@@ -37,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.LastDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Users.Id)
+                @Html.DisplayFor(modelItem => item.Users.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Rooms.Id)
