@@ -3,23 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SlunchevIzgrev.Data;
 
 #nullable disable
 
-namespace SlunchevIzgrev.Data.Migrations
+namespace SlunchevIzgrev.Migrations
 {
     [DbContext(typeof(SlunchevIzgrevDbContext))]
-    [Migration("20230223063701_test")]
-    partial class test
+    partial class SlunchevIzgrevDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.14")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -266,7 +264,7 @@ namespace SlunchevIzgrev.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

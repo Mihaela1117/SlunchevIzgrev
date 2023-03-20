@@ -9,17 +9,17 @@ using SlunchevIzgrev.Data;
 
 #nullable disable
 
-namespace SlunchevIzgrev.Data.Migrations
+namespace SlunchevIzgrev.Migrations
 {
     [DbContext(typeof(SlunchevIzgrevDbContext))]
-    [Migration("20230213071747_SlunchevIzgrev")]
-    partial class SlunchevIzgrev
+    [Migration("20230320080141_asdasd")]
+    partial class asdasd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.11")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -188,7 +188,7 @@ namespace SlunchevIzgrev.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("SlunchevIzgrev.Data.Room", b =>
@@ -223,7 +223,7 @@ namespace SlunchevIzgrev.Data.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Room");
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("SlunchevIzgrev.Data.RoomType", b =>
@@ -244,7 +244,7 @@ namespace SlunchevIzgrev.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomType");
+                    b.ToTable("RoomTypes");
                 });
 
             modelBuilder.Entity("SlunchevIzgrev.Data.User", b =>
@@ -266,7 +266,7 @@ namespace SlunchevIzgrev.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

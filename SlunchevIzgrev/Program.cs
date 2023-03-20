@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SlunchevIzgrev.Data;
+using SlunchevIzgrev.Services;
 
 namespace SlunchevIzgrev
 {
@@ -10,14 +11,17 @@ namespace SlunchevIzgrev
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<SlunchevIzgrevDbContext>(options =>
                 options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<SlunchevIzgrevDbContext>();
+            builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<SlunchevIzgrevDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddControllersWithViews();
             builder.Services.AddControllers(
                 options =>
@@ -25,7 +29,7 @@ namespace SlunchevIzgrev
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -33,9 +37,10 @@ namespace SlunchevIzgrev
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
                 app.UseHsts();
             }
+            app.PrepareDataBase().Wait();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -51,6 +56,7 @@ namespace SlunchevIzgrev
             app.MapRazorPages();
 
             app.Run();
+
         }
     }
 }
