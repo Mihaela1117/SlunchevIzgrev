@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +16,29 @@ namespace SlunchevIzgrev.Controllers
     public class ReservationsController : Controller
     {
         private readonly SlunchevIzgrevDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ReservationsController(SlunchevIzgrevDbContext context)
+        public ReservationsController(SlunchevIzgrevDbContext context,UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            var slunchevIzgrevDbContext = _context.Reservations.Include(r => r.Rooms).Include(r => r.Users);
-            return View(await slunchevIzgrevDbContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+                var slunchevIzgrevDbContext = _context.Reservations.Include(o => o.Rooms).Include(o => o.Users);
+                return View(await slunchevIzgrevDbContext.ToListAsync());
+            }
+            else
+            {
+                var currentUser = _userManager.GetUserId(User);
+                var slunchevIzgrevDbContext = await _context.Reservations.Include(o => o.Rooms).Include(o => o.Users)
+                     .Where(x => x.UserId == currentUser.ToString()).ToListAsync();
+                return View(slunchevIzgrevDbContext);
+            }
         }
 
         // GET: Reservations/Details/5
@@ -51,7 +65,6 @@ namespace SlunchevIzgrev.Controllers
         public IActionResult Create()
         {
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -60,16 +73,17 @@ namespace SlunchevIzgrev.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ComeInDate,LastDate,UserId,RoomId")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("RoomId,ComeInDate,LastDate")] Reservation reservation)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(reservation);
+                reservation.UserId = _userManager.GetUserId(User);
+                _context.Reservations.Add(reservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", reservation.RoomId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", reservation.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", reservation.UserId);
             return View(reservation);
         }
 
@@ -96,7 +110,7 @@ namespace SlunchevIzgrev.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ComeInDate,LastDate,UserId,RoomId")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ComeInDate,LastDate,RoomId")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
@@ -107,7 +121,8 @@ namespace SlunchevIzgrev.Controllers
             {
                 try
                 {
-                    _context.Update(reservation);
+                    reservation.UserId = _userManager.GetUserId(User);
+                    _context.Reservations.Update(reservation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -124,7 +139,7 @@ namespace SlunchevIzgrev.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", reservation.RoomId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", reservation.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", reservation.UserId);
             return View(reservation);
         }
 
