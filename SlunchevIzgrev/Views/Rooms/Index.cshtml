@@ -21,7 +21,7 @@
                     <img class="card-img-top" src="@Html.DisplayFor(modelItem => item.Photos)" height="100%">
                     <div class="card-body">
                         <h5 class="card-title">@Html.DisplayFor(modelItem => item.RoomTypes.Name)</h5>
-                        <p class="card-text">Цвят: @Html.DisplayFor(modelItem => item.RoomNumber)</p>
+                        <p class="card-text">Номер: @Html.DisplayFor(modelItem => item.RoomNumber)</p>
                         <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
                         <p class="card-subtitle">@Html.DisplayFor(modelItem => item.PricePerDay)лв на вечер</p>
                         <a class="btn btn-primary" asp-controller="Reservations" asp-action="Create" asp-route-id="@item.Id">Резервирай</a>

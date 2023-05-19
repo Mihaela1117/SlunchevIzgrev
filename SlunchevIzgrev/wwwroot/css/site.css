@@ -14,5 +14,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-image: url(https://wallpapercave.com/wp/wp9127221.jpg);
+    background-size: cover;
 }
